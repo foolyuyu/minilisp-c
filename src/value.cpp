@@ -74,7 +74,7 @@ std::string PairValue::toString() const {
     return oss.str();
 }
 
-std::ostream& operator<< (const ValuePtr& valuep, std::ostream& os) {
+std::ostream& operator<< (std::ostream& os, const ValuePtr& valuep) {
     os << valuep->toString() << std::endl;
     return os;
 }

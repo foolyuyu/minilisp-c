@@ -3,6 +3,7 @@
 
 #include "./tokenizer.h"
 #include "./value.h"
+#include "./parser.h"
 
 using ValuePtr = std::shared_ptr<Value>;
 
@@ -15,23 +16,17 @@ int main() {
             if (std::cin.eof()) {
                 std::exit(0);
             }
+
+            // 词法分析器
             auto tokens = Tokenizer::tokenize(line);
             for (auto& token : tokens) {
                 std::cout << *token << std::endl;
             }
 
-            ValuePtr a = std::make_shared<NumericValue>(42);
-            ValuePtr b = std::make_shared<BooleanValue>(false);
-            ValuePtr c = std::make_shared<SymbolValue>("eq?");
-            ValuePtr d = std::make_shared<StringValue>("Hello\"");
-            ValuePtr e = std::make_shared<NilValue>();
-            ValuePtr f = std::make_shared<PairValue>(std::make_shared<PairValue>(c, e),std::make_shared<PairValue>(a,std::make_shared<PairValue>(d, a)));
-            std::cout << a->toString() << '\n'
-                      << b->toString() << '\n'
-                      << c->toString() << '\n'
-                      << d->toString() << '\n'
-                      << e->toString() << '\n'
-                      << f->toString() << std::endl;
+            // 语法分析器
+            Parser parser(std::move(tokens));
+            auto value = parser.parse();
+            std::cout << value->toString() << std::endl;
 
         }
         catch (std::runtime_error& e) {

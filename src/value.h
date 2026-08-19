@@ -17,7 +17,7 @@ class Value {
 private:
     ValueType type;
 protected:
-    Value(const ValueType& type) : type{type} {};
+    Value(ValueType type) : type{type} {};
 public:
     virtual ~Value() = default;
     ValueType getType() const {
@@ -31,7 +31,7 @@ class BooleanValue : public Value {
 private:
     bool value;
 public:
-    BooleanValue(const bool& value) : Value(ValueType::BOOLEAN), value{value} {};
+    BooleanValue(bool value) : Value(ValueType::BOOLEAN), value{value} {};
     bool getValue() const {
         return value;
     }
@@ -43,7 +43,7 @@ class NumericValue : public Value {
 private:
     double value;
 public:
-    NumericValue(const double& value) : Value(ValueType::NUMERIC), value{value} {}
+    NumericValue(double value) : Value(ValueType::NUMERIC), value{value} {}
     double getValue() const {
         return value;
     }
