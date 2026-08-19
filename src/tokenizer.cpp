@@ -15,50 +15,60 @@ TokenPtr Tokenizer::nextToken(int& pos) {
             while (pos < input.size() && input[pos] != '\n') {
                 pos++;
             }
-        } else if (std::isspace(c)) {
+        } // 注释
+        else if (std::isspace(c)) {
             pos++;
-        } else if (auto token = Token::fromChar(c)) {
+        }
+        else if (auto token = Token::fromChar(c)) {
             pos++;
             return token;
-        } else if (c == '#') {
+        }
+        else if (c == '#') {
             if (auto result = BooleanLiteralToken::fromChar(input[pos + 1])) {
                 pos += 2;
                 return result;
-            } else {
+            }
+            else {
                 throw SyntaxError("Unexpected character after #");
             }
-        } else if (c == '"') {
+        }
+        else if (c == '"') {
             std::string string;
             pos++;
             while (pos < input.size()) {
                 if (input[pos] == '"') {
                     pos++;
                     return std::make_unique<StringLiteralToken>(string);
-                } else if (input[pos] == '\\') {
+                }
+                else if (input[pos] == '\\') {
                     if (pos + 1 >= input.size()) {
                         throw SyntaxError("Unexpected end of string literal");
                     }
                     auto next = input[pos + 1];
                     if (next == 'n') {
                         string += '\n';
-                    } else if (next == 't') {
+                    }
+                    else if (next == 't') {
                         string += '\t';
-                    } else {
+                    }
+                    else {
                         string += next;
                     }
                     pos += 2;
-                } else {
+                } // 处理转义字符
+                else {
                     string += input[pos];
                     pos++;
                 }
             }
             throw SyntaxError("Unexpected end of string literal");
-        } else {
+        }
+        else {
             int start = pos;
             do {
                 pos++;
-            } while (pos < input.size() && !std::isspace(input[pos]) &&
-                     !TOKEN_END.contains(input[pos]));
+            }
+            while (pos < input.size() && !std::isspace(input[pos]) && !TOKEN_END.contains(input[pos]));
             auto text = input.substr(start, pos - start);
             if (text == ".") {
                 return Token::dot();
@@ -66,8 +76,8 @@ TokenPtr Tokenizer::nextToken(int& pos) {
             if (std::isdigit(text[0]) || text[0] == '+' || text[0] == '-' || text[0] == '.') {
                 try {
                     return std::make_unique<NumericLiteralToken>(std::stod(text));
-                } catch (std::invalid_argument& e) {
                 }
+                catch (std::invalid_argument& e) {}
             }
             return std::make_unique<IdentifierToken>(text);
         }

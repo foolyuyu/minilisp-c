@@ -411,3 +411,9 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+main
+
+# Codex Agents
+AGENTS.md
+
